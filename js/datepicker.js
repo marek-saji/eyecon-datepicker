@@ -15,7 +15,7 @@
 				days: 'datepickerViewDays'
 			},
 			tpl = {
-				wrapper: '<div class="datepicker"><div class="datepickerBorderT" /><div class="datepickerBorderB" /><div class="datepickerBorderL" /><div class="datepickerBorderR" /><div class="datepickerBorderTL" /><div class="datepickerBorderTR" /><div class="datepickerBorderBL" /><div class="datepickerBorderBR" /><div class="datepickerContainer"><table cellspacing="0" cellpadding="0"><tbody><tr></tr></tbody></table></div></div>',
+				wrapper: '<div class="datepicker"><table cellspacing="0" cellpadding="0"><tbody><tr></tr></tbody></table></div>',
 				head: [
 					'<td>',
 					'<table cellspacing="0" cellpadding="0">',
@@ -38,7 +38,6 @@
 						'</thead>',
 					'</table></td>'
 				],
-				space : '<td class="datepickerSpace"><div></div></td>',
 				days: [
 					'<tbody class="datepickerDays">',
 						'<tr>',
@@ -444,25 +443,6 @@
 					return Math.floor(time / 24*60*60*1000);
 				};
 			},
-			layout = function (el) {
-				var options = $(el).data('datepicker');
-				var cal = $('#' + options.id);
-				if (!options.extraHeight) {
-					var divs = $(el).find('div');
-					options.extraHeight = divs.get(0).offsetHeight + divs.get(1).offsetHeight;
-					options.extraWidth = divs.get(2).offsetWidth + divs.get(3).offsetWidth;
-				}
-				var tbl = cal.find('table:first').get(0);
-				var width = tbl.offsetWidth;
-				var height = tbl.offsetHeight;
-				cal.css({
-					width: width + options.extraWidth + 'px',
-					height: height + options.extraHeight + 'px'
-				}).find('div.datepickerContainer').css({
-					width: width + 'px',
-					height: height + 'px'
-				});
-			},
 			click = function(ev) {
 				if ($(ev.target).is('span')) {
 					ev.target = ev.target.parentNode;
@@ -642,12 +622,10 @@
 					var viewPort = getViewport();
 					var top = pos.top;
 					var left = pos.left;
-					var oldDisplay = $.curCSS(calEl, 'display');
 					cal.css({
 						visibility: 'hidden',
-						display: 'block'
+						display: 'inline-block'
 					});
-					layout(calEl);
 					switch (options.position){
 						case 'top':
 							top -= calEl.offsetHeight;
@@ -676,7 +654,7 @@
 					}
 					cal.css({
 						visibility: 'visible',
-						display: 'block',
+						display: 'inline-block',
 						top: top + 'px',
 						left: left + 'px'
 					});
@@ -742,9 +720,6 @@
 						var html = '';
 						for (var i = 0; i < options.calendars; i++) {
 							cnt = options.starts;
-							if (i > 0) {
-								html += tpl.space;
-							}
 							html += tmpl(tpl.head.join(''), {
 									week: options.locale.weekMin,
 									prev: options.prev,
@@ -764,7 +739,6 @@
 						fill(cal.get(0));
 						if (options.flat) {
 							cal.appendTo(this).show().css('position', 'relative');
-							layout(cal.get(0));
 						} else {
 							cal.appendTo(document.body);
 							$(this).bind(options.eventName, show);
@@ -842,9 +816,6 @@
 					if ($(this).data('datepickerId')) {
 						var cal = $('#' + $(this).data('datepickerId'));
 						var options = cal.data('datepicker');
-						if (options.flat) {
-							layout(cal.get(0));
-						}
 					}
 				});
 			}
