@@ -216,6 +216,17 @@
 						if (fromUser.selected || options.date == val || $.inArray(val, options.date) > -1 || (options.mode == 'range' && val >= options.date[0] && val <= options.date[1])) {
 							data.weeks[indic].days[indic2].classname.push('datepickerSelected');
 						}
+						if (options.mode === 'range')
+						{
+							if (val === options.date[0])
+							{
+								data.weeks[indic].days[indic2].classname.push('datepickerSelected--start');
+							}
+							if (val === options.date[1] - 86399000)
+							{
+								data.weeks[indic].days[indic2].classname.push('datepickerSelected--end');
+							}
+						}
 						if (fromUser.disabled) {
 							data.weeks[indic].days[indic2].classname.push('datepickerDisabled');
 						}
@@ -714,6 +725,7 @@
 						options.id = id;
 						$(this).data('datepickerId', options.id);
 						var cal = $(tpl.wrapper).attr('id', id).bind('click', click).data('datepicker', options);
+						cal.addClass('datepicker--' + options.mode);
 						if (options.className) {
 							cal.addClass(options.className);
 						}
