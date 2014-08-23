@@ -666,6 +666,7 @@
 					cal.css({
 						visibility: 'visible',
 						display: 'inline-block',
+						position: 'absolute',
 						top: top + 'px',
 						left: left + 'px'
 					});
@@ -752,7 +753,7 @@
 						if (options.flat) {
 							cal.appendTo(this).show().css('position', 'relative');
 						} else {
-							cal.appendTo(document.body);
+							cal.hide().appendTo(document.body);
 							$(this).bind(options.eventName, show);
 						}
 					}
