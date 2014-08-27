@@ -636,6 +636,7 @@
 						cal.show();
 					}
 					$(document).bind('mousedown', {cal: cal, trigger: this}, hide);
+					$(window).bind('resize', {cal: cal, trigger: this}, position);
 				}
 				return false;
 			},
@@ -721,6 +722,7 @@
 						ev.data.cal.hide();
 					}
 					$(document).unbind('mousedown', hide);
+					$(window).unbind('resize', position);
 				}
 			};
 		return {
