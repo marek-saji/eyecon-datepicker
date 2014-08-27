@@ -626,46 +626,11 @@
 					fill(calEl);
 					var options = cal.data('datepicker');
 					options.onBeforeShow.apply(this, [cal.get(0)]);
-					var pos = $(this).offset();
-					var viewPort = getViewport();
-					var top = pos.top;
-					var left = pos.left;
-					cal.css({
-						visibility: 'hidden',
-						display: 'inline-block'
-					});
-					switch (options.position){
-						case 'top':
-							top -= calEl.offsetHeight;
-							break;
-						case 'left':
-							left -= calEl.offsetWidth;
-							break;
-						case 'right':
-							left += this.offsetWidth;
-							break;
-						case 'bottom':
-							top += this.offsetHeight;
-							break;
-					}
-					if (top + calEl.offsetHeight > viewPort.t + viewPort.h) {
-						top = pos.top  - calEl.offsetHeight;
-					}
-					if (top < viewPort.t) {
-						top = pos.top + this.offsetHeight + calEl.offsetHeight;
-					}
-					if (left + calEl.offsetWidth > viewPort.l + viewPort.w) {
-						left = pos.left - calEl.offsetWidth;
-					}
-					if (left < viewPort.l) {
-						left = pos.left + this.offsetWidth
-					}
+					position({data:{cal:cal, trigger: this}});
 					cal.css({
 						visibility: 'visible',
 						display: 'inline-block',
 						position: 'absolute',
-						top: top + 'px',
-						left: left + 'px'
 					});
 					if (options.onShow.apply(this, [cal.get(0)]) != false) {
 						cal.show();
@@ -673,6 +638,82 @@
 					$(document).bind('mousedown', {cal: cal, trigger: this}, hide);
 				}
 				return false;
+			},
+			position = function (ev) {
+				var cal = ev.data.cal;
+				var trigger = ev.data.trigger;
+				var options = cal.data('datepicker');
+				var calEl = cal.get(0);
+				var pos = $(trigger).offset();
+				var viewPort = getViewport();
+				var top = pos.top;
+				var left = pos.left;
+				var adjusted;
+				switch (options.position){
+					case 'top':
+						top -= calEl.offsetHeight;
+						break;
+					case 'left':
+						left -= calEl.offsetWidth;
+						break;
+					case 'right':
+						left += trigger.offsetWidth;
+						break;
+					case 'bottom':
+						top += trigger.offsetHeight;
+						break;
+				}
+				// sticks out at the bottom
+				if (top + calEl.offsetHeight > viewPort.t + viewPort.h) {
+					// switch from bottom to top
+					if ('bottom' === options.position) {
+						adjusted = pos.top - calEl.offsetHeight;
+					}
+					else if (-1 !== ['right','left'].indexOf(options.position)) {
+						adjusted = pos.top - calEl.offsetHeight + trigger.offsetHeight;
+					}
+					if (typeof adjusted !== 'undefined' && adjusted > viewPort.t) {
+						top = adjusted;
+					}
+				}
+				// sticks out at the top
+				if (top < viewPort.t) {
+					// switch from top to bottom
+					if ('top' === options.position)
+					{
+						adjusted = pos.top + trigger.offsetHeight;
+						if (adjusted + calEl.offsetWidth < viewPort.t + viewPort.h) {
+							top = adjusted;
+						}
+					}
+				}
+				// sticks out at the right
+				if (left + calEl.offsetWidth > viewPort.l + viewPort.w) {
+					// switch to left
+					if ('right' === options.position) {
+						adjusted = pos.left - calEl.offsetWidth;
+					}
+					else {
+						adjusted = pos.left - calEl.offsetWidth + trigger.offsetWidth;
+					}
+					if (typeof adjusted !== 'undefined' && adjusted + calEl.offsetWidth < viewPort.l + viewPort.w) {
+						left = adjusted;
+					}
+				}
+				// sticks out at the left
+				if (left < viewPort.l) {
+					// switch to right
+					if ('left' === options.position) {
+						adjusted = pos.left + trigger.offsetWidth
+						if (adjusted > viewPort.l) {
+							left = adjusted;
+						}
+					}
+				}
+				cal.css({
+					top: top + 'px',
+					left: left + 'px'
+				});
 			},
 			hide = function (ev) {
 				if (ev.target != ev.data.trigger && !isChildOf(ev.data.cal.get(0), ev.target, ev.data.cal.get(0))) {
