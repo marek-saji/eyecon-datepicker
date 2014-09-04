@@ -247,11 +247,15 @@
 				}
 			},
 			parseDate = function (date, format) {
+				var now = new Date();
+				if (! date) {
+					return new Date(now);
+				}
 				if (date.constructor == Date) {
 					return new Date(date);
 				}
 				var parts = date.split(/\W+/);
-				var against = format.split(/\W+/), d, m, y, h, min, now = new Date();
+				var against = format.split(/\W+/), d, m, y, h, min;
 				for (var i = 0; i < parts.length; i++) {
 					switch (against[i]) {
 						case 'd':
