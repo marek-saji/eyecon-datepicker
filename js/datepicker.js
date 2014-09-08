@@ -771,6 +771,7 @@
 						$(this).data('datepickerId', options.id);
 						var cal = $(tpl.wrapper).attr('id', id).bind('click', click).data('datepicker', options);
 						cal.addClass('datepicker--' + options.mode);
+						cal.toggleClass('datepicker--flat', options.flat);
 						if (options.className) {
 							cal.addClass(options.className);
 						}
