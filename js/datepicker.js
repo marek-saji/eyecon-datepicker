@@ -125,32 +125,6 @@
 					'</tbody>'
 				]
 			},
-			defaults = {
-				flat: false,
-				starts: 1,
-				prev: '&#9664;',
-				next: '&#9654;',
-				lastSel: false,
-				mode: 'single',
-				view: 'days',
-				calendars: 1,
-				format: 'Y-m-d',
-				position: 'bottom',
-				eventName: 'click',
-				onRender: function(){return {};},
-				onChange: function(){return true;},
-				onShow: function(){return true;},
-				onBeforeShow: function(){return true;},
-				onHide: function(){return true;},
-				locale: {
-					days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-					daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-					daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
-					months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-					monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-					weekMin: 'wk'
-				}
-			},
 			fill = function(el) {
 				var options = $(el).data('datepicker');
 				var cal = $(el);
@@ -731,7 +705,7 @@
 			};
 		return {
 			init: function(options){
-				options = $.extend({}, defaults, options||{});
+				options = $.extend({}, DatePicker.defaultOptions, options||{});
 				extendDate(options.locale);
 				options.calendars = Math.max(1, parseInt(options.calendars,10)||1);
 				options.mode = /single|multiple|range/.test(options.mode) ? options.mode : 'single';
@@ -803,6 +777,32 @@
 						}
 					}
 				});
+			},
+			defaultOptions: {
+				flat: false,
+				starts: 1,
+				prev: '&#9664;',
+				next: '&#9654;',
+				lastSel: false,
+				mode: 'single',
+				view: 'days',
+				calendars: 1,
+				format: 'Y-m-d',
+				position: 'bottom',
+				eventName: 'click',
+				onRender: function(){return {};},
+				onChange: function(){return true;},
+				onShow: function(){return true;},
+				onBeforeShow: function(){return true;},
+				onHide: function(){return true;},
+				locale: {
+					days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+					daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+					daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+					months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+					monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+					weekMin: 'wk'
+				}
 			},
 			showPicker: function() {
 				return this.each( function () {
@@ -881,6 +881,7 @@
 	}();
 	$.fn.extend({
 		DatePicker: DatePicker.init,
+		DatePickerDefaultOptions: DatePicker.defaultOptions,
 		DatePickerHide: DatePicker.hidePicker,
 		DatePickerShow: DatePicker.showPicker,
 		DatePickerSetDate: DatePicker.setDate,
