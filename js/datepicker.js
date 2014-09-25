@@ -770,7 +770,12 @@
 								.find('table').addClass(views[options.view]);
 						fill(cal.get(0));
 						if (options.flat) {
-							cal.appendTo(this).show().css('position', 'relative');
+							if ($(this).is(':input')) {
+								cal.insertAfter(this);
+							} else {
+								cal.appendTo(this);
+							}
+							cal.show().css('position', 'relative');
 						} else {
 							cal.hide().appendTo(document.body);
 							$(this).bind(options.eventName, show);
