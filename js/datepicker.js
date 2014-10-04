@@ -218,6 +218,13 @@
 					};
 					html = tmpl(tpl.months.join(''), data) + html;
 					tblCal.append(html);
+					if (! options.weekColumn) {
+						tblCal
+							.find('.datepickerDoW > :nth-child(8)')
+								.siblings().first()
+								.add( tblCal.find('.datepickerWeek') )
+									.remove();
+					}
 				}
 			},
 			parseDate = function (date, format) {
@@ -746,6 +753,7 @@
 						var cal = $(tpl.wrapper).attr('id', id).bind('click', click).data('datepicker', options);
 						cal.addClass('datepicker--' + options.mode);
 						cal.toggleClass('datepicker--flat', options.flat);
+						cal.toggleClass('datepicker--withWeekColumn', options.weekColumn);
 						if (options.className) {
 							cal.addClass(options.className);
 						}
@@ -768,6 +776,16 @@
 						cal
 							.find('tr:first').append(html)
 								.find('table').addClass(views[options.view]);
+						if (! options.weekColumn) {
+							cal
+								.find('.datepickerWeek')
+									.remove()
+								.end()
+								.find('.datepickerMonth')
+									.attr('colspan', function (idx, value) {
+										return value - 1;
+									});
+						}
 						fill(cal.get(0));
 						if (options.flat) {
 							if ($(this).is(':input')) {
@@ -785,6 +803,7 @@
 			},
 			defaultOptions: {
 				flat: false,
+				weekColumn: false,
 				starts: 1,
 				prev: '&#9664;',
 				next: '&#9654;',
