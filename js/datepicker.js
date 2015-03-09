@@ -387,12 +387,7 @@
 					return this[fullName ? 'days' : 'daysShort'][this.getDay()];
 				};
 				Date.prototype.addDays = function (n) {
-					var a = this.getTimezoneOffset() * 60000;
 					this.setDate(this.getDate() + n);
-					var b = this.getTimezoneOffset() * 60000;
-					if (a != b) {
-						this.setTime(this.getTime() + (b - a));
-					}
 					this.tempDate = this.getDate();
 				};
 				Date.prototype.addMonths = function (n) {
